@@ -3,9 +3,12 @@ import numpy as np
 import random
 import string
 
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.metrics.paiwise import cosine_similarity
 
 
-f=open('chatbot.txt', 'r', errors = 'ignor')
+
+f=open('chatbot.txt', 'r', errors = 'ignore')
 
 raw=f.read
 raw = raw.lower()
@@ -38,3 +41,24 @@ def greeting(sentence):
     for word in sentence.split():
         if word.lower() in GREETING_INPUTS:
             return random.choice(GREETING_RESPONSES)
+
+
+
+def response(user_response):
+    robo_response = ''
+    sent_tokens.append(user_response)
+
+    TfidfVec = TfidfVectorizer(tokenizer=LemNormalize,stop_words='english')
+    tfidf = TfidfVec.fit_transform(sent_tokens)
+    vals = cosine_similarity(tfidf[-1], tfidf)
+    idx=vals.argsort() [0] [-2]
+    flat = vals.flatten()
+    flat.sort()
+    reg_tfidf = flat[-2]
+
+    if(req_tfidf==0):
+        robo_response=robo_response+"I am sorry! I don't understand you"
+        retrun robo_response
+    else:
+        robo_response = robo_response+sent_tokens[idx]
+        return robo_response
